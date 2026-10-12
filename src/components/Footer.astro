@@ -6,44 +6,66 @@ const navLinks = siteConfig.footerNavLinks ?? [];
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="mx-auto w-full max-w-3xl pt-12 pb-10 sm:pt-24 sm:pb-14">
+{/*
+    Kept short: the theme default (`sm:pt-24`) left a large empty gap above the rule, so
+    the paddings are trimmed to roughly the sticky header's height.
+*/}
+<footer class="pt-5 pb-5 sm:pt-6 sm:pb-6">
     {navLinks.length > 0 && (
-        <nav class="mb-4 flex flex-wrap gap-x-6 gap-y-1" aria-label="Footer navigation">
-            {navLinks.map((link) => (
-                <a class="font-serif hover:underline hover:underline-offset-2" href={link.href}>
-                    {link.text}
-                </a>
-            ))}
-        </nav>
-    )}
-    <div
-        class:list={[
-            'border-main flex flex-col gap-4 border-t border-dashed pt-6',
-            { 'sm:flex-row-reverse sm:items-center sm:justify-between': socialLinks.length > 0 }
-        ]}
-    >
-        {socialLinks.length > 0 && (
-            <div class="flex flex-wrap gap-x-4 gap-y-1">
-                {socialLinks.map((link) => (
-                    <a
-                        class="inline-flex items-center justify-center text-sm hover:underline hover:underline-offset-2"
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
+        <div class="mx-auto w-full max-w-3xl">
+            <nav class="mb-4 flex flex-wrap gap-x-6 gap-y-1" aria-label="Footer navigation">
+                {navLinks.map((link) => (
+                    <a class="font-serif hover:underline hover:underline-offset-2" href={link.href}>
                         {link.text}
                     </a>
                 ))}
+            </nav>
+        </div>
+    )}
+    {/*
+        The dashed rule runs edge to edge (same as the sticky header's), so it is pulled
+        out of the page padding; the text inside stays in the centred site column.
+    */}
+    <div class="border-main -mx-4 border-t border-dashed px-4 pt-4 md:-mx-8 md:px-8">
+        <div
+            class:list={[
+                'mx-auto flex w-full max-w-3xl flex-col gap-4',
+                { 'sm:flex-row-reverse sm:items-center sm:justify-between': socialLinks.length > 0 }
+            ]}
+        >
+            {socialLinks.length > 0 && (
+                <div class="flex flex-wrap gap-x-4 gap-y-1">
+                    {socialLinks.map((link) => (
+                        <a
+                            class="inline-flex items-center justify-center text-sm hover:underline hover:underline-offset-2"
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {link.text}
+                        </a>
+                    ))}
+                </div>
+            )}
+            <div class="flex flex-col gap-4">
+                <p class="text-sm">
+                    &copy; {currentYear}{' '}
+                    <a class="hover:underline hover:underline-offset-2" href="/">
+                        {siteConfig.title}
+                    </a> · 
+                    All content licensed under
+                    <a
+                        class="hover:underline hover:underline-offset-2"
+                        href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+                        target="_blank"
+                        rel="noopener noreferrer license">CC BY-NC-SA 4.0</a
+                    > · 
+                    Powered by <a class="hover:underline hover:underline-offset-2" href="https://astro.build/">Astro</a> & <a
+                        class="hover:underline hover:underline-offset-2"
+                        href="https://github.com/JustGoodUI/dante-astro-theme">dante-astro-theme</a
+                    >.
+                </p>
             </div>
-        )}
-        <p class="text-sm">
-            &copy; {currentYear}{' '}
-            <a class="hover:underline hover:underline-offset-2" href="/">
-                {siteConfig.title}
-            </a>
-            . All rights reserved.
-
-            Powered by <a class="hover:underline hover:underline-offset-2" href="https://astro.build/">Astro</a> & <a class="hover:underline hover:underline-offset-2" href="https://github.com/JustGoodUI/dante-astro-theme">dante-astro-theme</a>.
-        </p>
+        </div>
     </div>
 </footer>

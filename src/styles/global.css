@@ -7,6 +7,24 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/**
+ * Keep the vertical scrollbar space reserved on every page (see `overflow-y-scroll`
+ * on <html> in BaseLayout). Without it, short pages lay out wider than long pages,
+ * so centred content — the nav and footer — shifts a few pixels between routes.
+ */
+html {
+    scrollbar-gutter: stable;
+}
+
+/**
+ * Text selection follows the site palette (ink on paper, inverted in dark mode)
+ * instead of the browser's default blue.
+ */
+::selection {
+    background-color: var(--text-main);
+    color: var(--bg-main);
+}
+
 :root {
     --text-main: #171717;
     --bg-main: #f2f1ec;

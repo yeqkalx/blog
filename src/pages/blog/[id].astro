@@ -1,11 +1,10 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
 import PostPreview from '../../components/PostPreview.astro';
-import Subscribe from '../../components/Subscribe.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
-import { slugify } from '../../utils/common-utils';
+import { getTextStats } from '../../utils/text-stats';
 
 export async function getStaticPaths() {
     const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
@@ -24,44 +23,35 @@ type Props = { post: CollectionEntry<'blog'>; prevPost: CollectionEntry<'blog'>;
 
 const { post, prevPost, nextPost } = Astro.props;
 const { title, publishDate, updatedDate, excerpt, tags = [], seo } = post.data;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const { words, minutes } = getTextStats(post.body ?? '');
 ---
 
-<BaseLayout title={seo?.title ?? title} description={seo?.description ?? excerpt} image={seo?.image} pageType={seo?.pageType ?? 'article'} showHeader={false}>
-    <article class="mb-16 sm:mb-24">
-        <header class="mb-8">
-            <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">{title}</h1>
-            <div class="mt-4 text-sm">
-                <FormattedDate date={publishDate} />
-                {updatedDate && (
-                    <>
-                        {' '}
-                        <span>
-                            (Updated on <FormattedDate date={updatedDate} />)
-                        </span>
-                    </>
-                )}
-            </div>
-        </header>
-        <div class="prose sm:prose-lg max-w-none">
-            <Content />
-        </div>
-        {tags.length > 0 && (
-            <div class="mt-8 flex flex-wrap gap-x-5 gap-y-1 text-sm sm:mt-12 sm:text-base">
-                {tags.map((tag) => (
-                    <a class="text-main hover:underline" href={`/tags/${slugify(tag)}`}>
-                        #{tag}
-                    </a>
-                ))}
-            </div>
-        )}
-    </article>
+<BaseLayout
+    title={seo?.title ?? title}
+    description={seo?.description ?? excerpt}
+    image={seo?.image}
+    pageType={seo?.pageType ?? 'article'}
+    showHeader={false}
+    back={{ href: '/blog', label: '返回博客列表' }}
+>
+    <PostLayout
+        title={title}
+        publishDate={publishDate}
+        updatedDate={updatedDate}
+        excerpt={excerpt}
+        tags={tags}
+        headings={headings}
+        words={words}
+        minutes={minutes}
+    >
+        <Content />
+    </PostLayout>
     {(prevPost || nextPost) && (
-        <div class="my-16 sm:my-24">
+        <div class="mx-auto my-16 max-w-3xl sm:my-24">
             <h2 class="mb-12 font-serif text-xl italic sm:mb-16 sm:text-2xl">Read Next</h2>
             {nextPost && <PostPreview post={nextPost} class="mb-10 sm:mb-12" headingLevel="h3" />}
             {prevPost && <PostPreview post={prevPost} class="mb-10 sm:mb-12" headingLevel="h3" />}
         </div>
     )}
-    <Subscribe class="my-16 sm:my-24" />
 </BaseLayout>

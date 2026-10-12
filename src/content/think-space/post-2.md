@@ -1,7 +1,7 @@
 ---
 title: 我的第一篇文章
 excerpt: 这里是摘要，会显示在博客列表页和首页的预览卡片上，也用作搜索结果的描述。
-publishDate: 'Nov 1 2026'
+publishDate: 'Oct 10 2026'
 isFeatured: true
 tags:
   - Guide

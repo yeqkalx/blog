@@ -30,6 +30,27 @@ export type Subscribe = {
     form?: SubscribeForm;
 };
 
+/** Comment widget, rendered by `src/components/Giscus.astro`. */
+export type Giscus = {
+    enabled?: boolean;
+    /** GitHub repo that hosts the discussions, e.g. `user/repo`. */
+    repo: string;
+    /** `data-repo-id` from giscus.app. */
+    repoId: string;
+    /** Discussion category name, e.g. `Announcements`. */
+    category: string;
+    /** `data-category-id` from giscus.app. */
+    categoryId: string;
+    /** Heading shown above the widget. Omit to use `Comments`. */
+    title?: string;
+    mapping?: 'pathname' | 'url' | 'title' | 'og:title' | 'specific' | 'number';
+    strict?: boolean;
+    reactionsEnabled?: boolean;
+    emitMetadata?: boolean;
+    inputPosition?: 'top' | 'bottom';
+    lang?: string;
+};
+
 export type SiteConfig = {
     website: string;
     avatar?: ImageInput;
@@ -42,6 +63,7 @@ export type SiteConfig = {
     socialLinks?: Link[];
     hero?: Hero;
     subscribe?: Subscribe;
+    giscus?: Giscus;
     postsPerPage?: number;
     projectsPerPage?: number;
 };

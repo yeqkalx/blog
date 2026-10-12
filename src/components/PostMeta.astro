@@ -1,0 +1,60 @@
+---
+import FormattedDate from './FormattedDate.astro';
+import { slugify } from '../utils/common-utils';
+
+type Props = {
+    publishDate: Date;
+    updatedDate?: Date | undefined;
+    excerpt?: string | undefined;
+    tags?: string[];
+    words: number;
+    minutes: number;
+};
+
+const { publishDate, updatedDate, excerpt, tags = [], words, minutes } = Astro.props;
+---
+
+<div class="text-sm leading-normal">
+    <div class="mb-5">
+        <p class="font-serif mb-1.5 italic opacity-60">发布于</p>
+        <p class="opacity-80">
+            <FormattedDate date={publishDate} />
+        </p>
+        {updatedDate && (
+            <p class="mt-0.5 opacity-55">
+                更新于 <FormattedDate date={updatedDate} />
+            </p>
+        )}
+    </div>
+
+    <div class="mb-5">
+        <p class="font-serif mb-1.5 italic opacity-60">字数</p>
+        <p class="opacity-80">
+            {words.toLocaleString('en-US')} 字 · 约 {minutes} 分钟
+        </p>
+    </div>
+
+    {
+        excerpt && (
+            <div class="mb-5">
+                <p class="font-serif mb-1.5 italic opacity-60">摘要</p>
+                <p class="opacity-75">{excerpt}</p>
+            </div>
+        )
+    }
+
+    {
+        tags.length > 0 && (
+            <div>
+                <p class="font-serif mb-1.5 italic opacity-60">标签</p>
+                <div class="flex flex-wrap gap-x-3 gap-y-1">
+                    {tags.map((tag) => (
+                        <a class="opacity-80 hover:underline hover:underline-offset-2 hover:opacity-100" href={`/tags/${slugify(tag)}`}>
+                            #{tag}
+                        </a>
+                    ))}
+                </div>
+            </div>
+        )
+    }
+</div>

@@ -1,14 +1,49 @@
 ---
+import ArrowLeft from '../assets/icons/arrow-left.svg';
+import IconButton from './IconButton.astro';
 import NavLink from './NavLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import siteConfig from '../data/site-config';
 
+type Props = {
+    /** Sub-pages (a post, a tag listing…) get a small arrow back to their section. */
+    back?: { href: string; label: string } | undefined;
+};
+
+const { back } = Astro.props;
 const navLinks = siteConfig.headerNavLinks ?? [];
 ---
 
-<nav class="relative min-h-10 pt-4 pb-12 sm:min-h-14 sm:pb-24 md:pt-8" aria-label="Primary navigation">
+{/*
+    Sticky so the navigation stays reachable while reading a long article. The bar is
+    full-bleed: the page wrapper already pads the viewport (`px-4 md:px-8`), so the
+    negative margins let the background reach the edges while the padding keeps the
+    links aligned with the content column. The old `pb` is split between the bar and a
+    margin, so the spacing to the page content is unchanged. The dashed separator only
+    appears once scrolled (see the script below), keeping the page top borderless.
+*/}
+<nav
+    class="bg-main sticky top-0 z-40 -mx-4 mb-9 min-h-10 border-b border-dashed border-transparent px-4 pt-4 pb-3 data-[scrolled]:border-main sm:mb-20 sm:min-h-14 sm:pb-4 md:-mx-8 md:px-8 md:pt-8"
+    aria-label="Primary navigation"
+    data-nav
+>
     {navLinks.length > 0 && (
         <div class="relative mx-auto w-full max-w-3xl">
+            {/*
+                The back arrow is absolutely positioned so it never shifts the navigation:
+                in the left gutter on wide screens (where this site has room), and on the
+                right of the bar below that — the left corner is taken by the menu button.
+            */}
+            {back && (
+                <IconButton
+                    href={back.href}
+                    aria-label={back.label}
+                    title={back.label}
+                    class="absolute top-1/2 right-0 z-30 -translate-y-1/2 lg:right-full lg:mr-6"
+                >
+                    <ArrowLeft class="h-4 w-4 fill-current" />
+                </IconButton>
+            )}
             <button
                 class="menu-toggle relative z-30 -ml-1 flex h-8 w-8 cursor-pointer items-center justify-center md:hidden"
                 aria-label="Open Menu"
@@ -19,7 +54,11 @@ const navLinks = siteConfig.headerNavLinks ?? [];
             </button>
             <ul
                 id="menu-items"
-                class="menu max-md:bg-main max-md:border-main flex gap-6 max-md:absolute max-md:-top-2.5 max-md:-left-2.5 max-md:z-20 max-md:max-w-64 max-md:flex-col max-md:gap-1 max-md:border max-md:border-dashed max-md:px-3 max-md:pt-16 max-md:pb-10"
+                class:list={[
+                    'menu max-md:bg-main max-md:border-main flex gap-6 max-md:absolute max-md:-top-2.5 max-md:-left-2.5 max-md:z-20 max-md:max-w-64 max-md:flex-col max-md:gap-1 max-md:border max-md:border-dashed max-md:px-3 max-md:pt-16 max-md:pb-10',
+                    // Keep the theme toggle clear of the back arrow between md and lg.
+                    { 'md:max-lg:pr-14': back }
+                ]}
             >
                 {navLinks.map((link) => (
                     <li class="py-1">
@@ -99,4 +138,18 @@ const navLinks = siteConfig.headerNavLinks ?? [];
     }
     menuToggle();
     document.addEventListener('astro:after-swap', menuToggle);
+
+    // The sticky bar only gets its separating border once the page is scrolled.
+    function updateStickyState() {
+        const nav = document.querySelector('[data-nav]');
+        if (!nav) return;
+        nav.toggleAttribute('data-scrolled', window.scrollY > 8);
+    }
+    // `<html>` survives view transitions, so the listeners are only bound once.
+    if (!document.documentElement.dataset.navStickyBound) {
+        document.documentElement.dataset.navStickyBound = 'true';
+        window.addEventListener('scroll', updateStickyState, { passive: true });
+        document.addEventListener('astro:page-load', updateStickyState);
+    }
+    updateStickyState();
 </script>

@@ -1,0 +1,51 @@
+---
+import type { MarkdownHeading } from 'astro';
+import Giscus from '../components/Giscus.astro';
+import PostMeta from '../components/PostMeta.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+
+type Props = {
+    title: string;
+    publishDate: Date;
+    updatedDate?: Date | undefined;
+    excerpt?: string | undefined;
+    tags?: string[];
+    headings: MarkdownHeading[];
+    words: number;
+    minutes: number;
+};
+
+const { title, publishDate, updatedDate, excerpt, tags = [], headings, words, minutes } = Astro.props;
+---
+
+{/*
+    Wide screens: contents on the left of the prose, post information on the right.
+    The grid itself is wider than the centred site column so the middle measure stays
+    at a comfortable reading width while the rails reach further out.
+
+    The rails stick below the sticky header (see `Nav.astro`) instead of at the very
+    top of the viewport, otherwise the header would cover them.
+*/}
+<div class="mx-auto grid w-full max-w-3xl grid-cols-1 gap-10 lg:max-w-[76rem] lg:grid-cols-[auto_48rem_auto] lg:justify-center lg:gap-12">
+    <aside class="hidden self-start lg:sticky lg:top-24 lg:block">
+        <div class="max-w-56">
+            <TableOfContents headings={headings} />
+        </div>
+    </aside>
+
+    <article class="mb-16 min-w-0 sm:mb-24">
+        <header class="mb-8">
+            <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">{title}</h1>
+        </header>
+        <div class="prose sm:prose-lg max-w-none">
+            <slot />
+        </div>
+        <Giscus class="mt-16 sm:mt-24" />
+    </article>
+
+    <aside class="hidden self-start lg:sticky lg:top-24 lg:block">
+        <div class="w-60">
+            <PostMeta publishDate={publishDate} updatedDate={updatedDate} excerpt={excerpt} tags={tags} words={words} minutes={minutes} />
+        </div>
+    </aside>
+</div>

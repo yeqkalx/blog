@@ -1,0 +1,97 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+type Props = { headings: MarkdownHeading[] };
+
+const { headings } = Astro.props;
+
+// Group h3s under the h2 that precedes them.
+const items: { heading: MarkdownHeading; children: MarkdownHeading[] }[] = [];
+for (const heading of headings) {
+    if (heading.depth === 2) items.push({ heading, children: [] });
+    else if (heading.depth === 3) {
+        if (items.length === 0) items.push({ heading, children: [] });
+        else items[items.length - 1].children.push(heading);
+    }
+}
+
+const anchorIds = items.flatMap(({ heading, children }) => [heading.slug, ...children.map((child) => child.slug)]);
+---
+
+{
+    items.length > 0 && (
+        <nav aria-label="Table of contents" data-toc class="text-sm leading-normal">
+            <p class="font-serif mb-3 italic opacity-60">目录</p>
+            <ul class="border-main space-y-1.5 border-l border-dashed pl-3">
+                {items.map(({ heading, children }) => (
+                    <>
+                        <li>
+                            <a
+                                class="opacity-80 hover:underline hover:underline-offset-2 hover:opacity-100 aria-[current=true]:font-serif aria-[current=true]:font-medium aria-[current=true]:underline aria-[current=true]:underline-offset-2 aria-[current=true]:opacity-100"
+                                href={`#${heading.slug}`}
+                                data-toc-link={heading.slug}
+                            >
+                                {heading.text}
+                            </a>
+                        </li>
+                        {children.map((child) => (
+                            <li class="pl-3">
+                                <a
+                                    class="opacity-55 hover:underline hover:underline-offset-2 hover:opacity-100 aria-[current=true]:font-serif aria-[current=true]:font-medium aria-[current=true]:underline aria-[current=true]:underline-offset-2 aria-[current=true]:opacity-100"
+                                    href={`#${child.slug}`}
+                                    data-toc-link={child.slug}
+                                >
+                                    {child.text}
+                                </a>
+                            </li>
+                        ))}
+                    </>
+                ))}
+            </ul>
+        </nav>
+    )
+}
+
+<script is:inline define:vars={{ anchorIds }}>
+    (() => {
+        function markCurrent() {
+            const toc = document.querySelector('[data-toc]');
+            if (!toc) return;
+
+            // Only accept an entry whose heading is a real, visible section.
+            const measured = anchorIds
+                .map((id) => ({ id, el: document.getElementById(id) }))
+                .filter((entry) => entry.el && entry.el.getBoundingClientRect().height > 0);
+            if (measured.length === 0) return;
+
+            // The section being read is the last heading above the reading line.
+            // Near the top of the page, before the first heading, nothing is current.
+            let current = null;
+            if (window.scrollY > 24) {
+                for (const entry of measured) {
+                    if (entry.el.getBoundingClientRect().top <= 96) current = entry.id;
+                    else break;
+                }
+            }
+
+            toc.querySelectorAll('[data-toc-link]').forEach((link) => {
+                if (link.dataset.tocLink === current) link.setAttribute('aria-current', 'true');
+                else link.removeAttribute('aria-current');
+            });
+        }
+
+        let frame = 0;
+        const onScroll = () => {
+            if (frame) return;
+            frame = requestAnimationFrame(() => {
+                frame = 0;
+                markCurrent();
+            });
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        document.addEventListener('astro:page-load', markCurrent);
+        markCurrent();
+    })();
+</script>

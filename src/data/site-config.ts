@@ -46,6 +46,19 @@ const siteConfig: SiteConfig = {
             }
         ]
     },
+    giscus: {
+        enabled: true,
+        repo: 'yeqkalx/blog',
+        repoId: 'R_kgDOVFqG6w',
+        category: 'Announcements',
+        categoryId: 'DIC_kwDOVFqG684DH_xk',
+        mapping: 'pathname',
+        strict: false,
+        reactionsEnabled: true,
+        emitMetadata: false,
+        inputPosition: 'bottom',
+        lang: 'zh-CN'
+    },
     postsPerPage: 8,
     projectsPerPage: 8
 };

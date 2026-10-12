@@ -1,0 +1,82 @@
+---
+import siteConfig from '../data/site-config';
+
+type Props = { class?: string };
+
+const { class: className } = Astro.props;
+const giscus = siteConfig.giscus;
+
+// Comments are opt-in: without a complete giscus configuration nothing is rendered.
+if (!giscus?.enabled || !giscus.repo || !giscus.repoId || !giscus.category || !giscus.categoryId) {
+    return;
+}
+
+/**
+ * giscus is attached by the client script below instead of a plain `<script src>` tag,
+ * because this site renders with Astro view transitions: a plain tag only runs on a
+ * hard load, so the widget would disappear on every client-side navigation.
+ *
+ * `data-theme` is intentionally not `preferred_color_scheme`: the site has its own
+ * light/dark toggle (see `public/theme-toggle.js`) which can disagree with the OS.
+ * The script reads the live theme from `<html class="dark">` and re-sends it to the
+ * frame whenever the toggle flips.
+ */
+const giscusAttributes = {
+    'data-repo': giscus.repo,
+    'data-repo-id': giscus.repoId,
+    'data-category': giscus.category,
+    'data-category-id': giscus.categoryId,
+    'data-mapping': giscus.mapping ?? 'pathname',
+    'data-strict': giscus.strict ? '1' : '0',
+    'data-reactions-enabled': giscus.reactionsEnabled === false ? '0' : '1',
+    'data-emit-metadata': giscus.emitMetadata ? '1' : '0',
+    'data-input-position': giscus.inputPosition ?? 'bottom',
+    'data-lang': giscus.lang ?? 'zh-CN'
+};
+---
+
+<section class:list={[className]} aria-label="Comments">
+    <h2 class="mb-8 font-serif text-xl italic sm:mb-10 sm:text-2xl">{giscus.title ?? 'Comments'}</h2>
+    {/* giscus mounts its iframe into the element carrying the `giscus` class. */}
+    <div class="giscus"></div>
+</section>
+
+<script is:inline define:vars={{ giscusAttributes }}>
+    (() => {
+        const theme = () => (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+
+        function mount() {
+            const container = document.querySelector('.giscus');
+            // Tracked per element: a view transition builds a fresh container, while
+            // repeated events for the page that is already mounted do nothing.
+            if (!container || container.dataset.giscusMounted === 'true') return;
+            container.dataset.giscusMounted = 'true';
+            container.replaceChildren();
+
+            const script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            script.setAttribute('data-theme', theme());
+            for (const [name, value] of Object.entries(giscusAttributes)) script.setAttribute(name, value);
+            container.append(script);
+        }
+
+        function syncTheme() {
+            const frame = document.querySelector('iframe.giscus-frame');
+            frame?.contentWindow?.postMessage({ giscus: { setConfig: { theme: theme() } } }, 'https://giscus.app');
+        }
+
+        if (!window.__giscusBound) {
+            window.__giscusBound = true;
+            // Fires on the first load and after every client-side navigation.
+            document.addEventListener('astro:page-load', mount);
+            // The site's toggle only swaps <html class="dark">, so follow that.
+            new MutationObserver(syncTheme).observe(document.documentElement, { attributeFilter: ['class'] });
+        }
+
+        // Covers the case where `astro:page-load` already fired before this inline
+        // script ran; `mount()` is a no-op when the container is already mounted.
+        mount();
+    })();
+</script>
