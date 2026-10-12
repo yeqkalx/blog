@@ -1,0 +1,25 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'a'>;
+
+const { href, class: className, ...props } = Astro.props;
+
+// External links are excluded from the router's client-side navigation and
+// from active-state matching, so they get a real page load instead.
+const isExternal = typeof href === 'string' && /^(https?:)?\/\//.test(href);
+
+const { pathname } = Astro.url;
+const isActive = !isExternal && (href === pathname || href === pathname.replace(/\/$/, ''));
+---
+
+<a
+    class:list={[className, { 'underline decoration-1 underline-offset-2': isActive }]}
+    href={href}
+    data-astro-prefetch={isExternal ? 'false' : undefined}
+    target={isExternal ? '_blank' : undefined}
+    rel={isExternal ? 'noopener noreferrer' : undefined}
+    {...props}
+>
+    <slot />
+</a>
