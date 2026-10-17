@@ -1,19 +1,18 @@
 ---
 import type { GetStaticPathsOptions, Page } from 'astro';
-import { type CollectionEntry, getCollection } from 'astro:content';
 import Pagination from '../../../components/Pagination.astro';
 import PostPreview from '../../../components/PostPreview.astro';
 import Subscribe from '../../../components/Subscribe.astro';
 import siteConfig from '../../../data/site-config';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { getAllTags, getPostsByTag, sortItemsByDateDesc } from '../../../utils/data-utils';
+import { getAllTags, getAllTaggedPosts, getPostsByTag, sortItemsByDateDesc, type TaggedPost } from '../../../utils/data-utils';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-    const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
+    const posts = await getAllTaggedPosts();
     const tags = getAllTags(posts);
 
     return tags.flatMap((tag) => {
-        const filteredPosts = getPostsByTag(posts, tag.id);
+        const filteredPosts = getPostsByTag(posts, tag.id).sort((a, b) => sortItemsByDateDesc(a.post, b.post));
         return paginate(filteredPosts, {
             params: { id: tag.id },
             pageSize: siteConfig.postsPerPage || 4
@@ -21,16 +20,15 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     });
 }
 
-type Props = { page: Page<CollectionEntry<'blog'>> };
+type Props = { page: Page<TaggedPost> };
 
 const { page } = Astro.props;
-const blog = page.data;
+const taggedPosts = page.data;
 const params = Astro.params;
-const allPosts = await getCollection('blog');
-const allTags = getAllTags(allPosts);
-const currentTag = allTags.find((tag) => {
-    return tag.id === params.id;
-});
+const allTags = getAllTags(await getAllTaggedPosts());
+// Route params arrive percent-encoded for non-ASCII tags (`/tags/关系`); decode so the
+// lookup also works on servers that hand the raw segment through.
+const currentTag = allTags.find((tag) => tag.id === params.id || tag.id === decodeURIComponent(params.id ?? ''));
 ---
 
 <BaseLayout
@@ -40,8 +38,8 @@ const currentTag = allTags.find((tag) => {
     back={{ href: '/tags', label: '返回全部标签' }}
 >
     <h1 class="mb-12 font-serif text-2xl leading-tight italic sm:mb-16 sm:text-4xl">Posts Tagged "{currentTag?.name}"</h1>
-    {blog.map((post) => (
-        <PostPreview post={post} class="mb-10 sm:mb-12" />
+    {taggedPosts.map(({ post, basePath }) => (
+        <PostPreview post={post} basePath={basePath} class="mb-10 sm:mb-12" />
     ))}
     <Pagination page={page} class="my-16 sm:my-24" />
     <Subscribe class="my-16 sm:my-24" />

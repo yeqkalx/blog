@@ -1,17 +1,22 @@
+/**
+ * Turn a tag (or any label) into a URL segment.
+ *
+ * Kept Unicode-aware on purpose: the tags on this site are mostly Chinese, and the
+ * old `[^a-z0-9]` filter reduced every one of them to an empty string — so `/tags/关系`
+ * collapsed to `/tags/`, no tag page was generated and the links in `PostMeta` went
+ * nowhere. Letters and numbers from any script survive, accents fold to their base
+ * letter, and every run of other characters becomes a single hyphen.
+ */
 export function slugify(input?: string) {
     if (!input) return '';
 
-    // make lower case and trim
-    var slug = input.toLowerCase().trim();
-
-    // remove accents from charaters
-    slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-    // replace invalid chars with spaces
-    slug = slug.replace(/[^a-z0-9\s-]/g, ' ').trim();
-
-    // replace multiple spaces or hyphens with a single hyphen
-    slug = slug.replace(/[\s-]+/g, '-');
+    const slug = input
+        .toLowerCase()
+        .trim()
+        .normalize('NFKD') // split accented letters into base letter + combining mark
+        .replace(/[\u0300-\u036f]/g, '') // drop the combining marks
+        .replace(/[^\p{L}\p{N}]+/gu, '-') // any run of punctuation, spaces, emoji… -> hyphen
+        .replace(/^-+|-+$/g, ''); // no leading or trailing hyphen
 
     return slug;
 }
