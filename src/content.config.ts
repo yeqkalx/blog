@@ -27,11 +27,23 @@ const imageSchema = (image: ImageFunction) =>
         alt: emptyAsUnset(z.string())
     });
 
+/**
+ * Optional image block. A blank `src` — the `src: ''` left behind by a fresh
+ * frontmatter template — must mean "no image": handing it to `image()` throws
+ * `ImageNotFound` while the collection is parsed, which takes down every page
+ * that touches the collection instead of just this post.
+ */
+const optionalImage = (image: ImageFunction) =>
+    z.preprocess(
+        (value) => (isBlank(value) || (typeof value === 'object' && isBlank((value as { src?: unknown }).src)) ? undefined : value),
+        imageSchema(image).optional()
+    );
+
 const seoSchema = (image: ImageFunction) =>
     z.object({
         title: emptyAsUnset(z.string().min(5).max(120)),
         description: emptyAsUnset(z.string().min(15).max(160)),
-        image: imageSchema(image).optional(),
+        image: optionalImage(image),
         pageType: z.enum(['website', 'article']).optional()
     });
 

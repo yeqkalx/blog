@@ -5,9 +5,14 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Nav from '../components/Nav.astro';
 
-export type Props = HeadProps & { showHeader?: boolean; back?: { href: string; label: string } | undefined };
+export type Props = HeadProps & {
+    showHeader?: boolean;
+    back?: { href: string; label: string } | undefined;
+    /** Post pages push their reading grid beyond the 48rem site column to fit the side rails. */
+    wide?: boolean;
+};
 
-const { showHeader = true, back, ...head } = Astro.props;
+const { showHeader = true, back, wide = false, ...head } = Astro.props;
 ---
 
 <!doctype html>
@@ -28,7 +33,7 @@ const { showHeader = true, back, ...head } = Astro.props;
         <div class="flex min-h-screen flex-col px-4 md:px-8">
             <Nav back={back} />
             {showHeader && <Header />}
-            <main class="mx-auto w-full max-w-3xl grow">
+            <main class:list={['mx-auto w-full grow', wide ? 'max-w-none' : 'max-w-3xl']}>
                 <slot />
             </main>
             <Footer />

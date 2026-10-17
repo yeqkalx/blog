@@ -11,9 +11,21 @@
  * Keep the vertical scrollbar space reserved on every page (see `overflow-y-scroll`
  * on <html> in BaseLayout). Without it, short pages lay out wider than long pages,
  * so centred content — the nav and footer — shifts a few pixels between routes.
+ *
+ * `scroll-padding-top` keeps anchored jumps (the contents links) clear of the sticky
+ * navigation bar: the scroll target comes to rest below the bar instead of under it.
+ * The value is a little taller than the bar so the heading keeps some breathing room.
  */
 html {
     scrollbar-gutter: stable;
+    scroll-padding-top: 5.5rem;
+}
+
+/* The navigation bar is a taller two-row layout from `md` up. */
+@media (min-width: 48rem) {
+    html {
+        scroll-padding-top: 7rem;
+    }
 }
 
 /**

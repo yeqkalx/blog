@@ -19,16 +19,32 @@ const { title, publishDate, updatedDate, excerpt, tags = [], headings, words, mi
 ---
 
 {/*
-    Wide screens: contents on the left of the prose, post information on the right.
-    The grid itself is wider than the centred site column so the middle measure stays
-    at a comfortable reading width while the rails reach further out.
+    Reading layout: contents on the left, post information on the right.
 
-    The rails stick below the sticky header (see `Nav.astro`) instead of at the very
-    top of the viewport, otherwise the header would cover them.
+    Below `xl` this stays one centred column at the site measure (48rem), which is all a
+    narrow window has room for. From `xl` up the grid breaks out of the site column (see
+    the `wide` prop on BaseLayout) and becomes three columns:
+
+    - `--rail` is derived from the viewport (13rem floor, 16rem ceiling, 12vw between),
+      so both rails grow with the window. Deriving it matters because heading text is
+      arbitrary: the previous `auto` columns were sized by their content, so a long
+      Chinese heading collapsed the contents rail to a sliver while a short English one
+      left it merely cramped.
+    - the article column is capped at 48rem for a comfortable measure and can shrink
+      slightly on narrow `xl` windows, so the grid never overflows horizontally.
+    - at the widest windows the rail settles at 16rem against the 48rem article — a
+      1:3 proportion. In between, the article keeps its full measure and the leftover
+      space is simply centred.
+
+    The rails stick below the sticky header instead of at the very top of the viewport,
+    otherwise the header would cover them.
 */}
-<div class="mx-auto grid w-full max-w-3xl grid-cols-1 gap-10 lg:max-w-[76rem] lg:grid-cols-[auto_48rem_auto] lg:justify-center lg:gap-12">
-    <aside class="hidden self-start lg:sticky lg:top-24 lg:block">
-        <div class="max-w-56">
+<div
+    class="mx-auto grid w-full max-w-3xl grid-cols-1 gap-10 [--rail:clamp(13rem,12vw,16rem)] xl:max-w-none xl:grid-cols-[var(--rail)_minmax(0,48rem)_var(--rail)] xl:justify-center xl:gap-8"
+>
+    <aside class="hidden xl:sticky xl:top-28 xl:block xl:self-start">
+        {/* A very long outline scrolls inside the rail instead of running off the viewport. */}
+        <div class="xl:max-h-[calc(100dvh-8rem)] xl:overflow-y-auto xl:overscroll-contain">
             <TableOfContents headings={headings} />
         </div>
     </aside>
@@ -43,8 +59,9 @@ const { title, publishDate, updatedDate, excerpt, tags = [], headings, words, mi
         <Giscus class="mt-16 sm:mt-24" />
     </article>
 
-    <aside class="hidden self-start lg:sticky lg:top-24 lg:block">
-        <div class="w-60">
+    <aside class="hidden xl:sticky xl:top-28 xl:block xl:self-start">
+        {/* Same guard as the contents rail: long excerpts or tag lists stay inside the viewport. */}
+        <div class="xl:max-h-[calc(100dvh-8rem)] xl:overflow-y-auto xl:overscroll-contain">
             <PostMeta publishDate={publishDate} updatedDate={updatedDate} excerpt={excerpt} tags={tags} words={words} minutes={minutes} />
         </div>
     </aside>
