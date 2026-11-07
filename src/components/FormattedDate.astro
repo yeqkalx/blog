@@ -2,12 +2,14 @@
 type Props = { date: Date };
 
 const { date } = Astro.props;
+
+// `en-CA` is the locale that writes YYYY-MM-DD; using it (rather than slicing
+// `toISOString()`) keeps the date in the local time zone, so it never slips a day.
+const formatted = date.toLocaleDateString('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+});
 ---
 
-<time datetime={date.toISOString()}>
-    {date.toLocaleDateString('en-us', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })}
-</time>
+<time class="tabular-nums" datetime={date.toISOString()}>{formatted}</time>

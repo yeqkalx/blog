@@ -37,17 +37,17 @@ const { Content } = await render(project);
 >
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
-            <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">{title}</h1>
+            <h1 class="text-main text-[1.625rem] leading-snug font-semibold tracking-tight sm:text-[2rem] sm:leading-snug">{title}</h1>
         </header>
-        <div class="prose sm:prose-lg max-w-none">
+        <div class="prose max-w-none">
             <Content />
         </div>
     </article>
     {(prevProject || nextProject) && (
         <div class="my-16 sm:my-24">
-            <h2 class="mb-12 font-serif text-xl italic sm:mb-16 sm:text-2xl">View Next</h2>
-            {nextProject && <ProjectPreview project={nextProject} class="mb-10 sm:mb-12" headingLevel="h3" />}
-            {prevProject && <ProjectPreview project={prevProject} class="mb-10 sm:mb-12" headingLevel="h3" />}
+            <h2 class="section-title">View Next</h2>
+            {nextProject && <ProjectPreview project={nextProject} class="mb-8 sm:mb-10" headingLevel="h3" />}
+            {prevProject && <ProjectPreview project={prevProject} class="mb-8 sm:mb-10" headingLevel="h3" />}
         </div>
     )}
 </BaseLayout>

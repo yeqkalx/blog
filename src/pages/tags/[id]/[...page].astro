@@ -37,9 +37,9 @@ const currentTag = allTags.find((tag) => tag.id === params.id || tag.id === deco
     showHeader={false}
     back={{ href: '/tags', label: '返回全部标签' }}
 >
-    <h1 class="mb-12 font-serif text-2xl leading-tight italic sm:mb-16 sm:text-4xl">Posts Tagged "{currentTag?.name}"</h1>
+    <h1 class="page-title">Posts Tagged "{currentTag?.name}"</h1>
     {taggedPosts.map(({ post, basePath }) => (
-        <PostPreview post={post} basePath={basePath} class="mb-10 sm:mb-12" />
+        <PostPreview post={post} basePath={basePath} class="mb-8 sm:mb-10" />
     ))}
     <Pagination page={page} class="my-16 sm:my-24" />
     <Subscribe class="my-16 sm:my-24" />

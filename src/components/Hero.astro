@@ -10,8 +10,8 @@ const { title, image, text, actions } = Astro.props;
 ---
 
 {(title || image?.src || text || (actions && actions.length > 0)) && (
-    <section class="mb-16 flex w-full flex-col gap-8 sm:mb-24">
-        {title && <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">{title}</h1>}
+    <section class="mb-16 flex w-full flex-col gap-8 sm:mb-20">
+        {title && <h1 class="text-main text-3xl leading-tight font-semibold tracking-tight sm:text-4xl sm:leading-tight">{title}</h1>}
         {image?.src && (
             <figure>
                 <CustomImage
@@ -22,10 +22,10 @@ const { title, image, text, actions } = Astro.props;
                     fetchpriority="high"
                     loading="eager"
                 />
-                {image.caption && <figcaption class="mt-1.5 text-xs sm:text-sm">{image.caption}</figcaption>}
+                {image.caption && <figcaption class="text-muted mt-2 text-sm">{image.caption}</figcaption>}
             </figure>
         )}
-        {text && <div class="prose sm:prose-lg max-w-none" set:html={marked.parse(text)} />}
+        {text && <div class="prose max-w-none" set:html={marked.parse(text)} />}
         {actions && actions.length > 0 && (
             <div class="flex flex-wrap gap-4">
                 {actions.map((action) => (

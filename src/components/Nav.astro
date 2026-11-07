@@ -19,16 +19,16 @@ const navLinks = siteConfig.headerNavLinks ?? [];
     full-bleed: the page wrapper already pads the viewport (`px-4 md:px-8`), so the
     negative margins let the background reach the edges while the padding keeps the
     links aligned with the content column. The old `pb` is split between the bar and a
-    margin, so the spacing to the page content is unchanged. The dashed separator only
+    margin, so the spacing to the page content is unchanged. The hairline separator only
     appears once scrolled (see the script below), keeping the page top borderless.
 */}
 <nav
-    class="bg-main sticky top-0 z-40 -mx-4 mb-9 min-h-10 border-b border-dashed border-transparent px-4 pt-4 pb-3 data-[scrolled]:border-main sm:mb-20 sm:min-h-14 sm:pb-4 md:-mx-8 md:px-8 md:pt-8"
+    class="bg-main sticky top-0 z-40 -mx-4 mb-10 min-h-10 border-b border-transparent px-4 pt-4 pb-3 transition-colors data-[scrolled]:border-main sm:mb-16 sm:min-h-14 sm:pb-4 md:-mx-8 md:px-8 md:pt-6"
     aria-label="Primary navigation"
     data-nav
 >
     {navLinks.length > 0 && (
-        <div class="relative mx-auto w-full max-w-3xl">
+        <div class="relative mx-auto w-full max-w-2xl">
             {/*
                 The back arrow is absolutely positioned so it never shifts the navigation:
                 in the left gutter on wide screens (where this site has room), and on the
@@ -55,14 +55,17 @@ const navLinks = siteConfig.headerNavLinks ?? [];
             <ul
                 id="menu-items"
                 class:list={[
-                    'menu max-md:bg-main max-md:border-main flex gap-6 max-md:absolute max-md:-top-2.5 max-md:-left-2.5 max-md:z-20 max-md:max-w-64 max-md:flex-col max-md:gap-1 max-md:border max-md:border-dashed max-md:px-3 max-md:pt-16 max-md:pb-10',
+                    'menu max-md:bg-main max-md:border-main flex gap-7 max-md:absolute max-md:-top-2.5 max-md:-left-2.5 max-md:z-20 max-md:max-w-64 max-md:flex-col max-md:gap-1 max-md:rounded-md max-md:border max-md:px-4 max-md:pt-16 max-md:pb-8',
                     // Keep the theme toggle clear of the back arrow between md and lg.
                     { 'md:max-lg:pr-14': back }
                 ]}
             >
                 {navLinks.map((link) => (
                     <li class="py-1">
-                        <NavLink class="text-main font-serif text-xl hover:underline hover:decoration-1 hover:underline-offset-2 md:text-base" href={link.href}>
+                        <NavLink
+                            class="text-muted hover:text-main aria-[current=page]:text-main text-base transition-colors aria-[current=page]:font-medium md:text-[0.9375rem]"
+                            href={link.href}
+                        >
                             {link.text}
                         </NavLink>
                     </li>

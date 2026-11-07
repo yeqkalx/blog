@@ -2,10 +2,10 @@
 import siteConfig from '../data/site-config';
 import CustomImage from './CustomImage.astro';
 
-const titleClass = 'text-theme-foreground font-serif text-2xl leading-tight font-medium sm:text-3xl';
+const titleClass = 'text-main text-[1.75rem] leading-tight font-semibold tracking-tight sm:text-[2rem]';
 ---
 
-<header class="mx-auto mb-12 flex w-full max-w-3xl items-center gap-4 sm:mb-16">
+<header class="mx-auto mb-14 flex w-full max-w-2xl items-center gap-4 sm:mb-16">
     {siteConfig.avatar?.src && (
         <a href="/">
             <CustomImage
@@ -28,6 +28,6 @@ const titleClass = 'text-theme-foreground font-serif text-2xl leading-tight font
                 {siteConfig.title}
             </a>
         )}
-        {siteConfig.subtitle && <p class="text-sm leading-tight">{siteConfig.subtitle}</p>}
+        {siteConfig.subtitle && <p class="text-muted mt-1 text-sm leading-tight">{siteConfig.subtitle}</p>}
     </div>
 </header>

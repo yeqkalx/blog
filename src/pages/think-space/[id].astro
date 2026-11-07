@@ -49,10 +49,10 @@ const { words, minutes } = getTextStats(post.body ?? '');
         <Content />
     </PostLayout>
     {(prevPost || nextPost) && (
-        <div class="mx-auto my-16 max-w-3xl sm:my-24">
-            <h2 class="mb-12 font-serif text-xl italic sm:mb-16 sm:text-2xl">Read Next</h2>
-            {nextPost && <PostPreview post={nextPost} class="mb-10 sm:mb-12" headingLevel="h3" basePath="/think-space" />}
-            {prevPost && <PostPreview post={prevPost} class="mb-10 sm:mb-12" headingLevel="h3" basePath="/think-space" />}
+        <div class="mx-auto my-16 max-w-2xl sm:my-24">
+            <h2 class="section-title">Read Next</h2>
+            {nextPost && <PostPreview post={nextPost} class="mb-8 sm:mb-10" headingLevel="h3" basePath="/think-space" />}
+            {prevPost && <PostPreview post={prevPost} class="mb-8 sm:mb-10" headingLevel="h3" basePath="/think-space" />}
         </div>
     )}
 </BaseLayout>

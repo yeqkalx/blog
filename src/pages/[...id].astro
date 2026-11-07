@@ -22,10 +22,10 @@ const { Content } = await render(page);
 <BaseLayout title={seo?.title ?? title} description={seo?.description} image={seo?.image} pageType={seo?.pageType} showHeader={false}>
     <article class="mb-16 sm:mb-24">
         {/* Same heading treatment as the blog archive (`src/pages/blog/[...page].astro`). */}
-        <header class="mb-12 sm:mb-16">
-            <h1 class="font-serif text-2xl leading-tight italic sm:text-4xl">{title}</h1>
+        <header>
+            <h1 class="page-title">{title}</h1>
         </header>
-        <div class="prose sm:prose-lg max-w-none">
+        <div class="prose max-w-none">
             <Content />
         </div>
     </article>

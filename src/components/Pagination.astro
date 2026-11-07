@@ -12,7 +12,7 @@ const { page, class: className } = Astro.props;
             <ArrowLeft class="h-5 w-5 fill-current" />
         </IconButton>
     )}
-    <span class="text-sm" aria-current="page">
+    <span class="text-muted text-sm tabular-nums" aria-current="page">
         Page {page.currentPage} of {page.lastPage}
     </span>
     {page.url.next && (

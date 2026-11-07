@@ -14,8 +14,9 @@ const isActive = !isExternal && (href === pathname || href === pathname.replace(
 ---
 
 <a
-    class:list={[className, { 'underline decoration-1 underline-offset-2': isActive }]}
+    class:list={[className]}
     href={href}
+    aria-current={isActive ? 'page' : undefined}
     data-astro-prefetch={isExternal ? 'false' : undefined}
     target={isExternal ? '_blank' : undefined}
     rel={isExternal ? 'noopener noreferrer' : undefined}

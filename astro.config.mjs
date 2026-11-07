@@ -7,6 +7,12 @@ import siteConfig from './src/data/site-config';
 // https://astro.build/config
 export default defineConfig({
     site: siteConfig.website,
+    markdown: {
+        // Code blocks follow the site's light/dark toggle (see global.css).
+        shikiConfig: {
+            themes: { light: 'github-light', dark: 'github-dark' }
+        }
+    },
     vite: {
         plugins: [tailwindcss()]
     },
