@@ -25,7 +25,7 @@ const tags = getAllTags(posts).sort((tagA, tagB) => {
         const postCount = getPostsByTag(posts, tag.id).length;
         return (
             <a class="group mb-5 flex items-baseline justify-between gap-8" href={`/tags/${tag.id}`}>
-                <h2 class="text-main group-hover:text-accent text-[1.0625rem] leading-snug font-medium transition-colors sm:text-lg">{tag.name}</h2>
+                <h2 class="text-main text-[1.0625rem] leading-snug font-medium group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4 sm:text-lg">{tag.name}</h2>
                 <div class="text-muted shrink-0 text-sm tabular-nums">
                     {postCount} {postCount === 1 ? 'post' : 'posts'}
                 </div>

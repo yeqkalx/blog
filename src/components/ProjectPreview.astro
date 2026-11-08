@@ -9,7 +9,7 @@ const TitleTag = headingLevel;
 ---
 
 <a class:list={['group block', className]} href={`/projects/${project.id}/`}>
-    <TitleTag class="text-main group-hover:text-accent text-[1.0625rem] leading-snug font-medium transition-colors sm:text-lg">
+    <TitleTag class="text-main text-[1.0625rem] leading-snug font-medium group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4 sm:text-lg">
         {title}
     </TitleTag>
     {description && <p class="text-muted mt-2 text-sm leading-relaxed">{description}</p>}

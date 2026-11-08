@@ -27,33 +27,34 @@ html {
 }
 
 /**
- * Palette: a cool grey "mist" ground with slate ink and a single deep-blue accent.
+ * Palette: strictly black and white, no hue anywhere. Hierarchy comes from size, weight
+ * and space; grey is only used for dates and secondary text.
  *
- *   --text-main     body text and headings
- *   --text-muted    dates, labels, secondary navigation
+ *   --text-main     body text, headings, links, borders of controls
+ *   --text-muted    dates, secondary navigation
  *   --bg-main       page
- *   --bg-muted      quiet wash behind code, hover states
+ *   --bg-muted      quiet wash behind code
  *   --border-main   hairline dividers (decoration only)
- *   --border-strong borders of controls (buttons, inputs), ~3:1 against the page
- *   --accent        links, current item, focus ring — used sparingly
+ *   --border-strong borders of controls (buttons, inputs): the ink itself
+ *   --accent        same as the ink; kept as a token so there is one place to add a hue later
  */
 :root {
-    --text-main: #1c2430;
-    --text-muted: #5b6673;
-    --bg-main: #f6f7f8;
-    --bg-muted: #eceff1;
-    --border-main: #dde1e5;
-    --border-strong: #84909c;
-    --accent: #35566f;
+    --text-main: #0a0a0a;
+    --text-muted: #666666;
+    --bg-main: #ffffff;
+    --bg-muted: #f5f5f5;
+    --border-main: #e5e5e5;
+    --border-strong: #0a0a0a;
+    --accent: #0a0a0a;
 }
 html.dark {
-    --text-main: #dfe3e7;
-    --text-muted: #8f9aa6;
-    --bg-main: #14181d;
-    --bg-muted: #1c2229;
-    --border-main: #272e36;
-    --border-strong: #5a6672;
-    --accent: #8db0cc;
+    --text-main: #ededed;
+    --text-muted: #8c8c8c;
+    --bg-main: #000000;
+    --bg-muted: #111111;
+    --border-main: #242424;
+    --border-strong: #ededed;
+    --accent: #ededed;
 }
 
 @theme inline {
@@ -79,9 +80,10 @@ html.dark {
         text-autospace: normal;
     }
 
-    /* Selection and focus follow the accent instead of the browser's default blue. */
+    /* Selection is the page inverted: ink on paper becomes paper on ink. */
     ::selection {
-        background-color: color-mix(in srgb, var(--accent) 28%, transparent);
+        background-color: var(--text-main);
+        color: var(--bg-main);
     }
 
     :focus-visible {
@@ -89,10 +91,11 @@ html.dark {
         outline-offset: 3px;
     }
 
+    /* Not `balance`: it squeezes a Chinese title into two narrow lines and splits words. */
     h1,
     h2,
     h3 {
-        text-wrap: balance;
+        text-wrap: pretty;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -108,12 +111,12 @@ html.dark {
 @layer components {
     /* Heading of a listing page: Blog Archive, Think Space, All Tags, … */
     .page-title {
-        @apply text-main mb-12 text-[1.75rem] leading-tight font-semibold tracking-tight sm:mb-14 sm:text-[2rem];
+        @apply text-main mb-14 text-[1.75rem] leading-tight font-medium tracking-tight sm:mb-16 sm:text-[2rem];
     }
 
     /* Heading of a section inside a page: Writing, Read Next, Comments. */
     .section-title {
-        @apply text-muted mb-8 text-sm font-medium;
+        @apply text-main border-main mb-6 border-b pb-3 text-sm font-medium;
     }
 
     /* Secondary links (footer): quiet until hovered, but still underlined. */
@@ -137,13 +140,13 @@ html.dark {
         --tw-prose-body: var(--text-main);
         --tw-prose-headings: var(--text-main);
         --tw-prose-lead: var(--text-main);
-        --tw-prose-links: var(--accent);
+        --tw-prose-links: var(--text-main);
         --tw-prose-bold: var(--text-main);
         --tw-prose-counters: var(--text-muted);
         --tw-prose-bullets: var(--text-muted);
         --tw-prose-hr: var(--border-main);
         --tw-prose-quotes: var(--text-main);
-        --tw-prose-quote-borders: var(--border-strong);
+        --tw-prose-quote-borders: var(--text-main);
         --tw-prose-captions: var(--text-muted);
         --tw-prose-kbd: var(--text-main);
         --tw-prose-code: var(--text-main);
@@ -167,15 +170,15 @@ html.dark {
 
     .prose a {
         @apply font-normal underline decoration-1 underline-offset-[0.22em] transition-colors;
-        text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+        text-decoration-color: color-mix(in srgb, var(--text-main) 35%, transparent);
     }
 
     .prose a:hover {
-        text-decoration-color: var(--accent);
+        text-decoration-color: var(--text-main);
     }
 
     .prose :where(h1, h2, h3, h4, h5, h6) {
-        @apply font-semibold;
+        @apply font-medium;
         letter-spacing: -0.005em;
     }
 
@@ -218,7 +221,7 @@ html.dark {
 
     /* Inline code: a quiet wash instead of the plugin's default backticks. */
     .prose :where(code):not(:where(pre *)) {
-        @apply rounded-sm px-1.5 py-0.5 font-normal;
+        @apply px-1.5 py-0.5 font-normal;
         background-color: var(--bg-muted);
         font-size: 0.875em;
     }
@@ -228,13 +231,9 @@ html.dark {
     }
 
     .prose :where(pre) {
-        @apply rounded-md px-5 py-4;
+        @apply px-5 py-4;
         font-size: 0.875rem;
         line-height: 1.7;
-    }
-
-    .prose :where(img) {
-        @apply rounded-sm;
     }
 
     .prose :where(figcaption) {

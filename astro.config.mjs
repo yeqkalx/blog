@@ -10,7 +10,7 @@ export default defineConfig({
     markdown: {
         // Code blocks follow the site's light/dark toggle (see global.css).
         shikiConfig: {
-            themes: { light: 'github-light', dark: 'github-dark' }
+            themes: { light: 'min-light', dark: 'min-dark' }
         }
     },
     vite: {

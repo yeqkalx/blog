@@ -37,7 +37,7 @@ const { Content } = await render(project);
 >
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
-            <h1 class="text-main text-[1.625rem] leading-snug font-semibold tracking-tight sm:text-[2rem] sm:leading-snug">{title}</h1>
+            <h1 class="text-main text-[1.625rem] leading-snug font-medium tracking-tight sm:text-[1.875rem] sm:leading-snug">{title}</h1>
         </header>
         <div class="prose max-w-none">
             <Content />
@@ -46,8 +46,8 @@ const { Content } = await render(project);
     {(prevProject || nextProject) && (
         <div class="my-16 sm:my-24">
             <h2 class="section-title">View Next</h2>
-            {nextProject && <ProjectPreview project={nextProject} class="mb-8 sm:mb-10" headingLevel="h3" />}
-            {prevProject && <ProjectPreview project={prevProject} class="mb-8 sm:mb-10" headingLevel="h3" />}
+            {nextProject && <ProjectPreview project={nextProject} class="mb-5 sm:mb-6" headingLevel="h3" />}
+            {prevProject && <ProjectPreview project={prevProject} class="mb-5 sm:mb-6" headingLevel="h3" />}
         </div>
     )}
 </BaseLayout>

@@ -11,7 +11,7 @@ const { title, image, text, actions } = Astro.props;
 
 {(title || image?.src || text || (actions && actions.length > 0)) && (
     <section class="mb-16 flex w-full flex-col gap-8 sm:mb-20">
-        {title && <h1 class="text-main text-3xl leading-tight font-semibold tracking-tight sm:text-4xl sm:leading-tight">{title}</h1>}
+        {title && <h1 class="text-main text-3xl leading-tight font-medium tracking-tight sm:text-4xl sm:leading-tight">{title}</h1>}
         {image?.src && (
             <figure>
                 <CustomImage

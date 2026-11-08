@@ -11,8 +11,8 @@ if (!subscribe?.enabled || !subscribe?.form?.action) {
 }
 ---
 
-<section class:list={['bg-muted flex flex-col gap-2 rounded-lg px-6 py-8 sm:px-8 sm:py-10', className]}>
-    {subscribe.title && <h2 class="text-main w-full max-w-xl text-xl leading-tight font-semibold sm:text-2xl">{subscribe.title}</h2>}
+<section class:list={['border-main flex flex-col gap-2 border px-6 py-8 sm:px-8 sm:py-10', className]}>
+    {subscribe.title && <h2 class="text-main w-full max-w-xl text-xl leading-tight font-medium sm:text-2xl">{subscribe.title}</h2>}
     {subscribe.text && <p class="text-muted w-full max-w-xl text-sm leading-relaxed">{subscribe.text}</p>}
     <form
         action={subscribe.form.action}
@@ -28,7 +28,7 @@ if (!subscribe?.enabled || !subscribe?.form?.action) {
             required
             autocomplete="email"
             placeholder="name@example.com"
-            class="text-main border-strong placeholder:text-muted bg-main h-9 w-full rounded-md border px-3 py-2 text-sm"
+            class="text-main border-strong placeholder:text-muted bg-main h-9 w-full border px-3 py-2 text-sm"
             aria-label="Email address"
         />
         {subscribe.form.hiddenFields?.map((field) => (

@@ -5,27 +5,20 @@ import FormattedDate from './FormattedDate.astro';
 type Props = { post: CollectionEntry<'blog'> | CollectionEntry<'thinkSpace'>; class?: string; headingLevel?: 'h2' | 'h3'; basePath?: string };
 
 const { post, class: className, headingLevel = 'h2', basePath = '/blog' } = Astro.props;
-const { title, publishDate, updatedDate, excerpt } = post.data;
+const { title, publishDate } = post.data;
 const TitleTag = headingLevel;
 ---
 
 {/*
-    Date on the left, title and summary on the right: the list reads as a timeline.
+    One line per post: date, then title. The summary and update date live on the post
+    page itself (see PostMeta), so the list stays quiet however long the summaries are.
     Below `sm` the date stacks above the title instead.
 */}
-<a class:list={['group grid gap-x-8 gap-y-1.5 sm:grid-cols-[7.5rem_minmax(0,1fr)]', className]} href={`${basePath}/${post.id}/`}>
-    <div class="text-muted text-sm leading-snug whitespace-nowrap sm:pt-[0.4em]">
+<a class:list={['group grid gap-x-8 gap-y-0.5 sm:grid-cols-[6.5rem_minmax(0,1fr)] sm:items-baseline', className]} href={`${basePath}/${post.id}/`}>
+    <div class="text-muted text-sm whitespace-nowrap">
         <FormattedDate date={publishDate} />
-        {updatedDate && (
-            <p class="mt-0.5 text-xs">
-                更新于 <FormattedDate date={updatedDate} />
-            </p>
-        )}
     </div>
-    <div>
-        <TitleTag class="text-main group-hover:text-accent text-[1.0625rem] leading-snug font-medium transition-colors sm:text-lg">
-            {title}
-        </TitleTag>
-        {excerpt && <p class="text-muted mt-2 line-clamp-3 text-sm leading-relaxed">{excerpt}</p>}
-    </div>
+    <TitleTag class="text-main text-base leading-snug font-medium group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4 sm:text-[1.0625rem]">
+        {title}
+    </TitleTag>
 </a>

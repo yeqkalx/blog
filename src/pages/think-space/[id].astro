@@ -51,8 +51,8 @@ const { words, minutes } = getTextStats(post.body ?? '');
     {(prevPost || nextPost) && (
         <div class="mx-auto my-16 max-w-2xl sm:my-24">
             <h2 class="section-title">Read Next</h2>
-            {nextPost && <PostPreview post={nextPost} class="mb-8 sm:mb-10" headingLevel="h3" basePath="/think-space" />}
-            {prevPost && <PostPreview post={prevPost} class="mb-8 sm:mb-10" headingLevel="h3" basePath="/think-space" />}
+            {nextPost && <PostPreview post={nextPost} class="mb-5 sm:mb-6" headingLevel="h3" basePath="/think-space" />}
+            {prevPost && <PostPreview post={prevPost} class="mb-5 sm:mb-6" headingLevel="h3" basePath="/think-space" />}
         </div>
     )}
 </BaseLayout>

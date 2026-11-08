@@ -47,7 +47,7 @@ const { publishDate, updatedDate, excerpt, tags = [], words, minutes } = Astro.p
                 <p class="text-muted mb-1">标签</p>
                 <div class="flex flex-wrap gap-x-3 gap-y-1">
                     {tags.map((tag) => (
-                        <a class="hover:text-accent transition-colors" href={`/tags/${slugify(tag)}`}>
+                        <a class="hover:underline hover:decoration-1 hover:underline-offset-4" href={`/tags/${slugify(tag)}`}>
                             #{tag}
                         </a>
                     ))}
